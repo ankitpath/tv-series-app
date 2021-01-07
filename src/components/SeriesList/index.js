@@ -15,7 +15,7 @@ const SeriesListItem = ({series}) => (
 const SeriesList = (props)=>{
     return(
         <div>
-            SERIERS CONTAINERS 
+            tv series... 
             <ul className = "series-list">
             {props.list.map(series =>(
              <SeriesListItem series = {series}/>
