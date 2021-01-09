@@ -59,7 +59,7 @@ class Series extends Component {
 
         return(
             <div>
-                <Intro message = "Here you can find all of your most loved series" />
+                <Intro message = "find your loved series" />
                 <div>
                     <Form 
                     onChange={this.handleChange}

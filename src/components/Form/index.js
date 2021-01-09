@@ -8,8 +8,8 @@ const Form = ({onChange,value,onSubmit}) => {
             type="text" 
             onChange={onChange} 
             value={value}
-            size="50"
-            placeholder="Find your favorite TV series"
+            size="30"
+            placeholder="Search  your favorite TV series"
             />
         </form>
     );
