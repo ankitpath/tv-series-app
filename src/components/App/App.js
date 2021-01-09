@@ -2,7 +2,7 @@
 import { Component } from 'react';
 import './App.css';
 import Main from '../Main';
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet"; 
 
 
 class App extends Component{

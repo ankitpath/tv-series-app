@@ -60,7 +60,7 @@ class SingleSeries extends Component {
                         <p><strong><a href={show.officialSite}>{show.name} Official Site</a></strong></p>
                     </div>
                 </div>
-            ):views=(<div style={{marginLeft:"50%"}}></div>);
+            ):views=(<div style={{marginLeft:"65%"}}></div>);
         
         
         return(
