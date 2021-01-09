@@ -1,67 +1,82 @@
 import { Component } from 'react';
+import * as apiCalls from "../../components/App/api";
+import SearchResults from "../../components/SearchResults";
+import Form from "../../components/Form";
 import SeriesList from '../../components/SeriesList';
 import Loader from '../../components/Loader';
 import Intro from  '../../components/Intro';
 
-class Series  extends Component {
-    state = {
-        series : [],
-        seriesName : '',
-        isFetching : false
+class Series extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            series: [],
+            inputValue: "",
+            isFetching: false,
+            results: []
+        };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+    componentDidMount(){
+        this.loadShows("Walking Dead");
       }
-      
     
-        onChangeInputSeries = e =>{
-            this.setState ({seriesName : e.target.value,isFetching : true })
+    async loadShows(title){
+        let series = await apiCalls.getShow(title);
+        this.setState({series});
+    }
 
-        fetch(`http://api.tvmaze.com/shows?q=${e.target.value}`)
-        .then(response => response.json())
-        .then(json => {
-            console.log(json)
-            this.setState({series : json,isFetching : false})
-        })
-         
-        }
-        
+    async loadSearch(title){
+        let results = await apiCalls.getShow(title);
+        this.setState({results,isFetching:false});
+    }
     
-      
+    handleChange(e){
+        let inputValue = e.target.value;
+        this.setState({inputValue,isFetching:true});
+        apiCalls.getShow(inputValue).then(res=>(this.setState({results:res,isFetching:false})));
+
+    }
+
+    handleSubmit(e){
+        e.preventDefault();
+        this.loadShows(this.state.inputValue);
+        let inputValue = "";
+        this.setState({...this.state,inputValue});
+    }
+
     render(){
-        
-        const { series, seriesName, isFetching } = this.state
-        return (
-            
+        const {series, inputValue, results,isFetching} = this.state;
 
-            <div>
-                <Intro message = "HERE U FIND UR FAVOURITE TV SERIES"/>
-               the length of the series array is :{this.state.series.length} 
-               <div>
-            <input 
-                value={seriesName}
-            type = " text" onChange = {this.onChangeInputSeries}/>
-            </div>
-            {
-               !isFetching && series.length === 0 && seriesName.trim === ''
-                && 
-                <p> please enter series name </p>
-            }
-            {
-               !isFetching && series.length === 0 && seriesName.trim !== ''
-                &&
-                <p>no tv series is found </p>
-            }
-                {
-                    isFetching && <Loader/>
-                }
-                {
+        let views = <div style={{marginLeft:"50%"}}><Loader /></div>;
 
-                isFetching &&   <SeriesList list = {this.state.series}/>
-    }            
-            
-                  
-
-            </div>
-         )
+        if(series.length>0){
+            views = (
+                <SeriesList list={series} />
+            )
         }
-    
+
+        return(
+            <div>
+                <Intro message = "Here you can find all of your most loved series" />
+                <div>
+                    <Form 
+                    onChange={this.handleChange}
+                    onSubmit = {this.handleSubmit}
+                    value = {inputValue} />
+                    <SearchResults 
+                     isFetching={isFetching}
+                     results={results}
+                     inputValue={inputValue}   
+                    />
+                </div>
+                <div className="series">
+                    {views}
+                </div>
+            </div>
+        );
+    }
 }
+
 export default Series;

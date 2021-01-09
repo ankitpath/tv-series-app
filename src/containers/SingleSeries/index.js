@@ -1,54 +1,65 @@
-import React,{Component} from 'react';
-import Loader from '../../components/Loader';
+import React, {Component} from "react";
+import * as apiCalls from "../../components/App/api";
+import Loader from "../../components/Loader";
 import {Helmet} from "react-helmet";
 
 class SingleSeries extends Component {
-    state = {
-        show : null
+    constructor(props){
+        super(props);
+        this.state = {
+            show: null,
+        };
     }
     componentDidMount(){
-
-        const {id} = this.props.match.params.id
-        fetch(`http://api.tvmaze.com/shows?q=vkings${id}?embed-episodes`)
-        .then(response => response.json())
-        .then(json => this.setState({show: json}))
-
+        let {id} = this.props.match.params;
+        this.loadSingleShow(id);
     }
-        
+
+    async loadSingleShow(id){
+        let show = await apiCalls.getSingleShow(id);
+        this.setState({show});
+        console.log({show})
+    }
+
     render(){
-        const {show} = this.state
-        console.log(show)
-        console.log(this.props);
+        let views;
+        let {show} = this.state;
+        let regexp = /<p>|<b>|<\/p>|<\/b>/gm;
+        
+        this.state.show !== null?
+            views = (
+                <div className="single-show">
+                    <Helmet>
+                <meta charSet="utf-8" />
+                <title>tv series details</title>
+                <link rel="canonical" href="http://mysite.com/example" />
+            </Helmet>
+                    <div className="show-image">
+                        <img src={show.image.medium} alt={show.name} />
+                    </div>
+                    <div className="show-info">
+                        <h2 className="show-title">{show.name}</h2>
+                        <span><strong>Genres: </strong></span>
+                        {
+                            show.genres.map((g,i)=>(
+                                <span key={i}>{g} </span>
+                            ))
+                        }
+                        <p>
+                            {show.summary.replace(regexp,"")}
+                        </p>
+                        <p><strong><a href={show.officialSite}>{show.name} Official Site</a></strong></p>
+                    </div>
+                </div>
+            ):views=(<div style={{marginLeft:"50%"}}><Loader /></div>);
+        
+        
         return(
             <div>
-                <Helmet>
-      <meta charSet="utf-8" />
-      <title>details list</title>
-      <link rel="canonical" href="http://ankit.com/example" />
-      <meta name = "description " content = "tv series details"/>
-      <style>{`
-       body{
-         background-color :aqua
-       }
-       `}
-      </style>
-      </Helmet>
-            { show === null && <Loader/>}
-            {
-                show !==null 
-                && 
-                <div>
-                    <p>show name{show.name}</p>
-                    <p>premiered-{show.premiered}</p>
-                    <p>show id-{show.id}</p>
-                    <p>
-                        <img alt ="show" src = {show.image}/>
-                    </p>
-                    <p>show url -{show.url}</p>
-                    </div>
-            }
+               {views}
             </div>
-        )
+        );
     }
 }
-export default SingleSeries ;
+
+export default SingleSeries;

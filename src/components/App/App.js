@@ -15,9 +15,10 @@ class App extends Component{
     <div className="App">
       <Helmet>
       <meta charSet="utf-8" />
-      <title>tv series</title>
+      <title>homepaje</title>
       <link rel="canonical" href="http://ankit.com/example" />
       <meta name = "description " content = "tv series"/>
+
       <style>{`
        body{
          background-color :aqua
@@ -28,7 +29,7 @@ class App extends Component{
 
       <header className="App-header">
         <p>
-           <code>TV SERIES  </code> LIST
+           <code>Home  </code>
         </p>
       
       </header>
