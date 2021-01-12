@@ -15,7 +15,7 @@ class App extends Component{
     <div className="App">
       <Helmet>
       <meta charSet="utf-8" />
-      <title>homepaje</title>
+      <title>homepage</title>
       <link rel="canonical" href="http://ankit.com/example" />
       <meta name = "description " content = "tv series"/>
 
